@@ -1,9 +1,18 @@
+import ListPage from "./pages/ListPage";
+import RegisterPage from './pages/RegisterPage';
+import { Route, BrowserRouter as Router,Routes } from "react-router-dom";
+
 
 function App() {
 
   return (
     <>
-      <h2>Hello Mern Project</h2>
+    <Router>
+      <Routes>
+          <Route path="/" element={<ListPage/>}/>
+          <Route path="/register" element={<RegisterPage/>}/>
+      </Routes>
+    </Router>
     </>
   )
 }
