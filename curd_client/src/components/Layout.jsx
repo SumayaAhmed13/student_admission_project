@@ -10,8 +10,8 @@ import Navbar from 'react-bootstrap/Navbar';
         <Container>
           <Navbar.Brand href="/">Student Register</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link as={NavLink} to="/" className="nav-link3"> List </Nav.Link>
-            <Nav.Link as={NavLink} to="/register" className="nav-link3">Register</Nav.Link>
+            <Nav.Link as={NavLink} to="/" className="nav-link3" style={({ isActive }) =>isActive? {color: '#ff0000',fontSize: "20px"}:{ color: '#545e6f',fontSize: "20px"}}> List </Nav.Link>
+            <Nav.Link as={NavLink} to="/register" style={({ isActive }) =>isActive? {color: '#ff0000',fontSize: "20px"}:{ color: '#545e6f',fontSize: "20px"}} className="nav-link3">Register</Nav.Link>
            
           </Nav>
         </Container>

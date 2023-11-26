@@ -1,18 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
-import {Create} from "../APIRequest/ApiRequest";
+import {Create, Update,GetById} from "../APIRequest/ApiRequest";
 import { useNavigate } from 'react-router-dom';
  const RegisterForm = () => {
   let navigate=useNavigate();
   let [formValue,setFormValue]=useState({firstName:"",lastName:"",gender:"",nationality:"",
                                 address:"",email:"",phone:"",courses:"",dateOfBirth:"",admissionDate:""});
 
-    const onChangeInput=(name,value)=>{
+   let [editId,setEditId]=useState(null);
+
+   useEffect(()=>{
+      const urlParam=new URLSearchParams(window.location.search);
+      const id=urlParam.get('id');
+      if(id){
+        // alert(id)
+         setEditId(id)
+       }
+
+       ( async()=>{
+      if(id !==null)
+            await FillForm(id)
+       })()
+
+   },[])
+
+   const onChangeInput=(name,value)=>{
 
       setFormValue((formValue)=>({
               ...formValue,
               [name]:value }))
     } 
+   const FillForm=async(id)=>{
+
+     let res=await GetById(id);
+     setFormValue({firstName:res['firstName'],lastName:res['lastName'],gender:res['gender'],nationality:res['nationality'],
+     address:res['address'],email:res['email'],phone:res['phone'],courses:res['courses'],dateOfBirth:res['dateOfBirth'],admissionDate:res['admissionDate']})
+
+   } 
     
   const onSubmitHandler=async ()=>{
      if(formValue.firstName.length===0){
@@ -46,22 +70,41 @@ import { useNavigate } from 'react-router-dom';
       toast.error("Admission Date is Requried !");
      }
      else{
-      let res=await Create(formValue);
-      if(res){
-        toast.success("Data save Successfully");
-        navigate("/");
+      if(editId==null){
+         let res=await Create(formValue);
+         if(res){
+           toast.success("Data save Successfully");
+           navigate("/");
+   
+         }
+         else{
+           toast.error("Data Save failed");
+         }
+   
+        }
+        else{
+         let res=await Update(formValue,editId);
+         if(res){
+           toast.success("Data Update Successfully");
+           navigate("/");
+   
+         }
+         else{
+           toast.error("Data Update failed");
+         }
 
+        }
       }
-      else{
-        toast.error("Data Save failed");
-      }
-
-     }
+      
+      
   }  
   return (
     <div className='container pe-5 mt-5'>
-           <div className=' row'>
-              <div className='col-6'>
+           <div className='row'>
+            <div className='col-3'></div>
+            <div className='col-6 card pb-4 rounded-3'>
+            <h2 className='mb-3 text-center'>Student Register Form</h2>
+            <div className='col-6'>
                  <label className=' form-label'>First Name</label>
                  <input type='text' value={formValue.firstName} onChange={(e)=>onChangeInput('firstName',e.target.value)} placeholder='FirstName' className='form-control mb-3'/>
               </div>
@@ -103,8 +146,10 @@ import { useNavigate } from 'react-router-dom';
               </div>
               <div className='col-6'>
                 
-                 <button onClick={onSubmitHandler} className=' btn btn-primary w-50 pt-2'>Save</button>
+                 <button onClick={onSubmitHandler} className=' btn btn-success w-100 pt-2'>Save</button>
               </div>
+            </div>
+              
               <Toaster position="top-center" />
            </div>
 

@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Read,Delete } from '../APIRequest/ApiRequest';
 import Table from 'react-bootstrap/Table';
+import {Link} from 'react-router-dom';
  const ListItem = () => {
   const [data,setData]=useState([]);
   const [change,setChange]=useState(0);
   useEffect(()=>{
     (async()=>{
           let res= await Read();
-          console.log(res)
-          setData(res);
+         setData(res);
         
     })()
 
@@ -20,6 +20,7 @@ import Table from 'react-bootstrap/Table';
   let res=await Delete(id);
  // alert(res)
  if(res){
+   
     toast.success("Delete Successfully");
     setChange(new Date().getTime())
  }
@@ -76,7 +77,8 @@ if(data.length===0){
                               <td>{item['dateOfBirth']}</td>
                               <td>{item['admissionDate']}</td>
                               <td>
-                                <button onClick={()=>{onDelete(item['_id'])}} className='btn btn-danger'>Delete</button>
+                                <Link className='btn btn-primary mx-3' to={"/register?id=" +(item['_id']) }>Edit</Link>
+                                <button onClick={()=>{onDelete(item['_id'])}} className='btn btn-danger mx-2'>Delete</button>
                               </td>
                              </tr>
                           )
